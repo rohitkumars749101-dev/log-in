@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All-in-One Study Tracker</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f4f6f8; padding:20px; }
+    h1 { text-align:center; }
+    #progress { text-align:center; font-size:18px; margin-bottom:20px; }
+    .section { background:#fff; padding:15px; margin-bottom:20px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+    .section h2 { margin-top:0; }
+    label { display:block; padding:6px 0; cursor:pointer; }
+    label.completed { background:#d4edda; color:#155724; font-weight:bold; padding:8px; border-radius:6px; }
+    button { padding:10px 16px; font-size:16px; border:none; border-radius:6px; background:#d9534f; color:#fff; cursor:pointer; }
+    button:hover { background:#c9302c; }
+  </style>
+</head>
+<body>
+
+<h1>📘 Permanent Study Checklist</h1>
+<div id="progress">Completed: 0 / 0</div>
+
+<div id="content"></div>
+
+<div style="text-align:center; margin-top:30px;">
+  <button onclick="resetAll()">RESET ALL</button>
+</div>
+
+<script>
+const topics = [
+  "AGE","ALGEBRA + SIMPLIFICATION","AP & GP","AVERAGE","CI INSTALLMENT","CALENDAR","CIRCULAR RACE",
+  "COMPOUND & SIMPLE","CONCEPTABLE","COORDINATE GEOMETRY","COPY CONCEPTS","DISHONEST SHOPKEEPER",
+  "ELECTION","FINAL TOUCH","INTEREST","LINEAR RACE","MENSURATION","MISCELLANEOUS",
+  "PARTNERSHIP","PERMUTATION & COMBINATION","PRACTICE MIXED","PRISM","PROBABILITY",
+  "PROFIT & LOSS","PYRAMID","RATIO & MIXTURE","ROOT OF EQUATION","SI INSTALLMENT","SET THEORY",
+  "SIMPLIFICATION","SOLUBLE","STATISTICS","THIEF","TIME & DISTANCE","TIME & WORK","TRAIN",
+  "TRIANGLE + CIRCLE + MENSURATION","TRIGONOMETRY",
+  "CONCEPT FORMULA VIDEOS","MATHS VIDEOS","WORDS VIDEO","SCIENCE VIDEO","GENERAL STUDIES VIDEO",
+  "PROBABILITY VIDEO","TRIGONOMETRY VIDEO","GRAMMAR VIDEO",
+  "ECONOMY","GEOGRAPHY","HISTORY","CURRENT & STATISTICS","CURRENT","MIXED QUESTIONS","SCHEME",
+  "ALL IN ALL","POLITY","SCIENCE","SPORTS","WAR BOOK","UNESCO WORLD HERITAGE","AMENDMENT",
+  "AWARD","DAY & THEME","FIRST MINISTER","INDUSTRIAL POLICY","NEW MAJOR BILLS",
+  "RANK & INDUSTRIES","TEMPLES","ULTIMATE GA","APPOINTMENT",
+  "CLOZE TEST","ENGLISH COMPREHENSION","ENGLISH GRAMMAR","FILLER","HOMONYMS","IDIOMS",
+  "NARRATION","OWS","PHRASE","PQRS","SPELLING ERROR","SYNONYMS","VOICE","VOCAB CRUX","BEST VOICE",
+  "SECTIONAL ENGLISH","SECTIONAL MATHS","SECTIONAL REASONING","SECTIONAL GK",
+  "FULL MOCK","FULL MOCK ANALYSIS","COMPUTER","CUBE","INTEREST","SQUARE",
+  "TABLE","TRIPLET","UNDER ROOT"
+];
+
+const container = document.getElementById('content');
+const progressDiv = document.getElementById('progress');
+
+const section = document.createElement('div');
+section.className = 'section';
+section.innerHTML = '<h2>📌 Topics</h2>';
+
+function updateProgress() {
+  let completed = 0;
+  topics.forEach((_, i) => {
+    if (localStorage.getItem('topic_' + i) === 'true') completed++;
+  });
+  progressDiv.textContent = `Completed: ${completed} / ${topics.length}`;
+}
+
+
+topics.forEach((topic, i) => {
+  const id = 'topic_' + i;
+  const checked = localStorage.getItem(id) === 'true';
+
+  const label = document.createElement('label');
+  if (checked) label.classList.add('completed');
+
+  label.innerHTML = `<input type="checkbox" id="${id}" ${checked ? 'checked' : ''}> ${topic}`;
+
+  label.querySelector('input').addEventListener('change', function () {
+    localStorage.setItem(id, this.checked);
+    if (this.checked) label.classList.add('completed');
+    else label.classList.remove('completed');
+    updateProgress();
+  });
+
+  section.appendChild(label);
+});
+
+container.appendChild(section);
+updateProgress();
+
+function resetAll() {
+  if (confirm('Are you sure you want to RESET everything?')) {
+    topics.forEach((_, i) => localStorage.removeItem('topic_' + i));
+    location.reload();
+  }
+}
+</script>
+
+</body>
+</html>
